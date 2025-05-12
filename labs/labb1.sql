@@ -1,3 +1,4 @@
+USE everyloop;
 SELECT Spacecraft, [Launch date],
 [Carrier rocket], Operator, [Mission type]
 INTO SuccessfulMissions
@@ -90,9 +91,27 @@ GROUP BY Gender;
 
 GO
 
+SELECT p.Id, p.ProductName AS Product, s.CompanyName AS Supplier, c.CategoryName AS Category  FROM company.products p
+INNER JOIN company.categories c 
+ON c.Id = p.CategoryId
+INNER JOIN company.suppliers s
+ON s.Id = p.SupplierId;
+
+GO
+
+WITH employee_region AS (SELECT DISTINCT r.RegionDescription, e.EmployeeId FROM company.territories t
+INNER JOIN company.employee_territory e ON e.TerritoryId = t.Id
+INNER JOIN company.regions r ON r.Id = t.RegionId)
+
+SELECT RegionDescription AS Region, COUNT(*) AS Employees FROM employee_region
+GROUP BY RegionDescription;
+
+GO
+
+SELECT * FROM company.employees;
+SELECT B.Id,  B.Title + ', ' +B.FirstName + ' ' + B.LastName AS [Title, Name] ,ISNULL(A.Title + ', ' + A.FirstName + ' ' + A.LastName, 'Nobody!') AS [Reports to]
+FROM company.employees A
+RIGHT JOIN company.employees B ON B.ReportsTo = A.Id;
 
 
-BEGIN TRANSACTION;
-SELECT @@TRANCOUNT AS TransactionCount;
-ROLLBACK TRANSACTION;
-COMMIT TRANSACTION;
+

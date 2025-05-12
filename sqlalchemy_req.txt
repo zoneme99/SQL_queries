@@ -1,0 +1,6 @@
+requirements for SQLAlchemy
+pyODBC
+SQLAlchemy
+pymssql
+//Kan bara installera via pip, om den är sönder är ovanstående ett krav
+pip install
