@@ -53,7 +53,7 @@ HAVING COUNT(*) > 1;
 
 GO
 -- inspirerad kod från Grok, Först skapar jag en temporär tabell med unika nummer för alla dubletter
--- sedan konkatinerar jag numret med respektive användarnamn
+-- sedan konkatinerar jag numret med respektive användarnamn för att alla ska få unika användarnamn
 ALTER TABLE NewUsers
 ALTER COLUMN UserName varchar(100);
 WITH Dubletter AS (SELECT ID, ROW_NUMBER() OVER (PARTITION BY UserName ORDER BY UserName) AS IdNum 
