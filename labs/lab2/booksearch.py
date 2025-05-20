@@ -1,21 +1,31 @@
 from sqlalchemy import create_engine, text
-# CREATE LOGIN booksearcher
-#WITH PASSWORD = 'Book1234!';
-# Ersätt dessa med dina faktiska värden
-server = 'localhost'  # eller IP-adress
-database = 'Bokhandel'
-username = 'booksearcher'
-password = 'Book1234!'
+import pandas as pd
 
-# Skapa en engine (använd pyodbc som driver)
+server = 'localhost'  # IP-adress
+database = 'Bokhandel'
+username = 'booksearcher' # User som har rollen db_datareader
+password = 'Book1234!' # Har ej gömt lösen eftersom användaren är publik
+
+
+
 connection_string = f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server"
 engine = create_engine(connection_string)
 
-# Exempel på SQL-fråga
-sql_query = text("SELECT TOP 10 * FROM Ordrar")
+#Detta är en vy som ligger i boksearchvy.sql
+sql_query = text('''SELECT Bocker.Titel, Butiker.Namn AS Butik, LagerSaldo.Saldo
+FROM LagerSaldo
+INNER JOIN Bocker ON Bocker.ISBN13 = LagerSaldo.ISBN13
+INNER JOIN Butiker ON Butiker.ID = LagerSaldo.ButiksID
+WHERE Bocker.Titel LIKE :pattern''')
 
-# Kör frågan och skriv ut resultatet
-with engine.connect() as connection:
-    result = connection.execute(sql_query)
-    for row in result:
-        print(row)
+#Query-loop, sökordet hamnar i clause:t LIKE som filtrerar listan i sql-query
+#Eftersom Pandas har bra formatering, printar den ut en pandas dataframe
+while True:
+    print("Sök efter en bok och se dess lagerstatus för respektive butik!")
+    search_pattern = input("Ange ett sökord: ")
+    df = pd.read_sql(sql_query, engine, params={"pattern": '%' + search_pattern + '%'})
+    print(df)
+    msg = input("Tryck Enter för ny sökning, ange \'exit\' för att avsluta: ")
+    if msg == 'exit':
+        print("Välkommen tillbaka!")
+        break
