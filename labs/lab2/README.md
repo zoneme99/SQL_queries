@@ -10,7 +10,7 @@
 - ER_diagram.png : Bild på hela databasstrukturen till databas Bokhandel
 - Bokhandel.bak : Backup-fil på hela databasen
 
-### Kommentar gällande Store Procedure
-Har skapat en constraint som gör att det inte går att få ett negativt saldo hos en butik vilket skapar dataintigritet.
+### Kommentar gällande Store Procedure book_transaction
+Har skapat en constraint i LagerSaldo som gör att det inte går att få ett negativt saldo hos en butik vilket skapar dataintigritet.
 
 
