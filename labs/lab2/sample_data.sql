@@ -1,3 +1,6 @@
+USE Bokhandel;
+BEGIN TRANSACTION;
+BEGIN TRY
 -- Forlag
 INSERT INTO Forlag (ID, Namn) VALUES (1, 'Forlag_1');
 INSERT INTO Forlag (ID, Namn) VALUES (2, 'Forlag_2');
@@ -107,13 +110,30 @@ INSERT INTO Ordrar (ID, KundID, Skapad, Senast_levererad) VALUES (9, 10, '2025-0
 INSERT INTO Ordrar (ID, KundID, Skapad, Senast_levererad) VALUES (10, 7, '2025-03-14 11:55:13', '2025-05-08 11:55:13');
 
 -- OrderDetaljer
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (1, 7, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (2, 2, 2);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (3, 6, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (4, 4, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (5, 0, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (6, 9, 2);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (7, 4, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (8, 5, 1);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (9, 3, 2);
-INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (10, 5, 2);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (1, '9780000000007', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (2, '9780000000002', 2);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (3, '9780000000006', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (4, '9780000000004', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (5, '9780000000001', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (6, '9780000000009', 2);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (7, '9780000000004', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (8, '9780000000005', 1);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (9, '9780000000003', 2);
+INSERT INTO OrderDetaljer (OrderID, ISBN13, Antal) VALUES (10, '9780000000005', 2);
+
+COMMIT TRANSACTION;
+
+END TRY
+
+BEGIN CATCH
+    -- Roll back the transaction if an error occurs
+    ROLLBACK TRANSACTION;
+
+    -- Return the error details
+    SELECT 
+        ERROR_NUMBER() AS ErrorNumber,
+        ERROR_MESSAGE() AS ErrorMessage,
+        ERROR_LINE() AS ErrorLine,
+        ERROR_PROCEDURE() AS ErrorProcedure,
+        ERROR_STATE() AS ErrorState;
+END CATCH;
